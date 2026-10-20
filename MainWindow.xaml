@@ -40,7 +40,7 @@
       <StackPanel><TextBlock x:Name="ReaderSubject" Text="메일을 선택해 주세요" FontSize="23" FontWeight="Bold" Margin="0,0,0,22"/></StackPanel>
       <StackPanel Grid.Row="1" Margin="0,0,0,20"><TextBlock x:Name="ReaderSender" FontWeight="SemiBold"/><TextBlock x:Name="ReaderMeta" Foreground="{StaticResource Muted}" FontSize="11" Margin="0,7,0,16"/><WrapPanel><Button x:Name="ReadButton" Content="읽음으로 표시" Click="Read_Click" Padding="13,8"/><Button x:Name="StarButton" Content="☆ 중요 표시" Click="Star_Click" Padding="13,8"/></WrapPanel><Border Height="1" Background="#E7EDF5" Margin="0,22,0,0"/></StackPanel>
       <TextBox x:Name="ReaderBody" Grid.Row="2" VerticalContentAlignment="Top" IsReadOnly="True" TextWrapping="Wrap" BorderThickness="0" Background="Transparent" Padding="0" FontSize="14" VerticalScrollBarVisibility="Auto" AutomationProperties.Name="메일 본문"/>
-      
+
      </Grid>
     </Border>
    </Grid>
@@ -77,5 +77,3 @@
   </Grid>
  </Grid>
 </Window>
-
-
