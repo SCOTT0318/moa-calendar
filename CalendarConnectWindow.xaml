@@ -1,0 +1,13 @@
+<Window x:Class="Gather.CalendarConnectWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="계정 추가" Width="480" Height="590" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" ShowInTaskbar="False" Icon="Assets/moa.ico">
+ <Border Background="White" Padding="28"><StackPanel>
+  <TextBlock x:Name="ConnectTitle" Text="네이버 계정 추가" FontSize="23" FontWeight="Bold"/>
+  <TextBlock x:Name="ConnectHelp" Text="2단계 인증을 사용한다면 앱 비밀번호를 입력하세요. 메일 수신에는 네이버 메일의 IMAP 사용 설정도 필요합니다." Foreground="{StaticResource Muted}" Margin="0,12,0,18"/>
+  <TextBlock Text="표시 이름 (선택)" Margin="0,0,0,7"/><TextBox x:Name="LabelInput" MaxLength="40" AutomationProperties.Name="계정 표시 이름"/>
+  <StackPanel x:Name="PasswordPanel"><TextBlock x:Name="UserLabel" Text="네이버 아이디" Margin="0,14,0,7"/><TextBox x:Name="UserNameInput" MaxLength="160" AutomationProperties.Name="계정 아이디"/>
+  <TextBlock Text="비밀번호 또는 앱 비밀번호" Margin="0,14,0,7"/><PasswordBox x:Name="PasswordInput" Padding="12,9" MaxLength="256" AutomationProperties.Name="계정 비밀번호"/></StackPanel>
+  <WrapPanel Margin="0,18,0,0"><CheckBox x:Name="MailChoice" Content="메일 수신" IsChecked="True" Margin="0,0,22,0"/><CheckBox x:Name="CalendarChoice" Content="캘린더" IsChecked="True"/></WrapPanel>
+  <TextBlock Text="선택한 기능의 읽기 권한만 사용하며 연결 정보는 Windows 사용자 계정으로 암호화해 저장합니다." Foreground="{StaticResource Muted}" FontSize="12" Margin="0,16,0,0"/>
+  <TextBlock x:Name="ErrorText" Foreground="#B75447" MinHeight="35" Margin="0,10,0,0"/>
+  <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"><Button Content="취소" IsCancel="True"/><Button x:Name="ConnectButton" Content="연결" IsDefault="True" Click="Connect_Click" Style="{StaticResource Primary}"/></StackPanel>
+ </StackPanel></Border>
+</Window>
