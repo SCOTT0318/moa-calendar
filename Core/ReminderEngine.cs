@@ -7,6 +7,8 @@ public sealed class AppPreferences
     public bool NotificationsEnabled { get; set; } = true;
     public bool MailNotificationsEnabled { get; set; } = true;
     public bool CloseToTray { get; set; } = true;
+    public bool WidgetEnabled { get; set; }
+    public bool WidgetTopmost { get; set; }
     public int ReminderMinutes { get; set; } = 10;
     public Dictionary<string, DateTimeOffset> DeliveredReminders { get; set; } = [];
 }

@@ -9,7 +9,7 @@ public sealed class StateStore(string path)
     public DemoState Load(out string? warning)
     {
         warning = null;
-        if (!File.Exists(path)) return DemoFactory.Create(DateTime.Today);
+        if (!File.Exists(path)) return new DemoState();
         try
         {
             var data = JsonSerializer.Deserialize<DemoState>(File.ReadAllText(path), Options);
@@ -19,12 +19,22 @@ public sealed class StateStore(string path)
                 || data.Messages.Any(x => x is null || x.Body is null || x.Subject is null || x.Sender is null || x.SenderAddress is null || !data.Accounts.Any(a => a.Id == x.AccountId))
                 || data.Events.Any(x => x is null || x.Title is null || x.Location is null || x.End <= x.Start || (x.AccountId != Workspace.LocalCalendarId && !data.Accounts.Any(a => a.Id == x.AccountId))))
                 throw new JsonException("Unsupported demo data");
+            // Old releases saved synthetic accounts alongside personal local events.
+            // Remove only those accounts and their data; never match user event titles.
+            var demoIds = data.Accounts.Where(x => x.IsDemo).Select(x => x.Id).ToHashSet();
+            if (demoIds.Count > 0)
+            {
+                data.Messages.RemoveAll(x => demoIds.Contains(x.AccountId));
+                data.Events.RemoveAll(x => x.AccountId != Workspace.LocalCalendarId && demoIds.Contains(x.AccountId));
+                data.Accounts.RemoveAll(x => demoIds.Contains(x.Id));
+                Save(data);
+            }
             return data;
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or JsonException or NotSupportedException)
         {
-            warning = "저장된 데모를 읽지 못해 임시 데모를 열었습니다. 원본 보호를 위해 이번 실행은 저장하지 않습니다.";
-            return DemoFactory.Create(DateTime.Today);
+            warning = "저장된 내 일정을 읽지 못해 빈 화면을 열었습니다. 원본 보호를 위해 이번 실행은 저장하지 않습니다.";
+            return new DemoState();
         }
     }
     public void Save(DemoState state)

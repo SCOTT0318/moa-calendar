@@ -35,11 +35,14 @@ Directory.CreateDirectory(tempRoot);
 var storePath = Path.Combine(tempRoot, "state.json"); var store = new StateStore(storePath);
 ws.State.Messages[0].IsRead = true; store.Save(ws.State);
 var reloaded = store.Load(out var warning);
-Check(warning == null && reloaded.Messages[0].IsRead && reloaded.Events.Any(x => x.Id == local.Id), "local calendar and mail flags survive store reload");
+Check(warning == null && reloaded.Messages.Count == 0 && reloaded.Accounts.Count == 0 && reloaded.Events.Single().Id == local.Id, "upgrade removes synthetic mail and events while preserving personal local event");
+Check(store.Load(out _).Events.Single().Id == local.Id && !File.ReadAllText(storePath).Contains("gmail-demo"), "sample cleanup persists and is idempotent");
 var ws2 = new Workspace(reloaded); ws2.DeleteLocalEvent(local.Id); store.Save(ws2.State);
 Check(!store.Load(out _).Events.Any(x => x.Id == local.Id), "local event deletion persists");
 File.WriteAllText(storePath, "{invalid"); var recovered = store.Load(out warning);
-Check(warning != null && recovered.Accounts.Count == 3 && File.ReadAllText(storePath) == "{invalid", "corrupt file preserved with recovery warning");
+Check(warning != null && recovered.Accounts.Count == 0 && recovered.Messages.Count == 0 && recovered.Events.Count == 0 && File.ReadAllText(storePath) == "{invalid", "corrupt file preserved without regenerating examples");
+var fresh = new StateStore(Path.Combine(tempRoot, "new.json")).Load(out var freshWarning);
+Check(freshWarning == null && fresh.Accounts.Count == 0 && fresh.Messages.Count == 0 && fresh.Events.Count == 0, "first launch is empty without sample data");
 var invalid = DemoFactory.Create(today); invalid.Accounts.Add(invalid.Accounts[0]); store.Save(invalid); store.Load(out warning);
 Check(warning != null, "duplicate account IDs rejected on load");
 try { await new UnconfiguredConnector(Provider.Gmail).ReadInboxAsync(ws.State.Accounts[0], CancellationToken.None); throw new Exception("unconfigured auth unexpectedly proceeded"); }

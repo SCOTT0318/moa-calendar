@@ -31,6 +31,7 @@ public partial class MainWindow : Window
         InitializeComponent();
         InitializeCalendarSync(smoke);
         InitializeNotifications(smoke);
+        InitializeWidget();
         ProviderCards.ItemsSource = ProviderCatalog.All;
         ready = true;
         RefreshAccounts(); RefreshMessages(); RenderCalendar();
@@ -43,7 +44,7 @@ public partial class MainWindow : Window
         refreshing = true;
         AccountList.ItemsSource = MailAccounts().ToList();
         AccountList.SelectedItem = page == "mail" ? MailAccounts().FirstOrDefault(a => a.Id == accountId) : null;
-        MailAccountHeading.Text = HasRealMail ? "내 메일 계정" : "예시 메일 계정";
+        MailAccountHeading.Text = "내 메일 계정";
         refreshing = false;
     }
     private void RefreshMessages(string? keepId = null)
@@ -93,7 +94,7 @@ public partial class MainWindow : Window
         SettingsPanel.Visibility = value == "settings" ? Visibility.Visible : Visibility.Collapsed;
         MailNotice.Visibility = value == "mail" ? Visibility.Visible : Visibility.Collapsed;
         var account = MailAccounts().FirstOrDefault(x => x.Id == accountId);
-        MailNoticeText.Text = HasRealMail ? "받은 편지함의 최근 50통을 표시합니다. 읽음·중요 표시는 이 앱에서만 바뀌며 서버에 반영하지 않습니다." : "예시 메일함입니다. 설정에서 계정을 추가하면 실제 받은 편지함을 볼 수 있습니다.";
+        MailNoticeText.Text = HasRealMail ? "받은 편지함의 최근 50통을 표시합니다. 읽음·중요 표시는 이 앱에서만 바뀌며 서버에 반영하지 않습니다." : "설정에서 계정을 추가하면 실제 받은 편지함을 볼 수 있습니다.";
         PageTitle.Text = value switch { "calendar" => "캘린더", "settings" => "설정", _ => account?.Label ?? "통합 메일함" };
         PageSubtitle.Text = value switch { "calendar" => "내 일정과 연결한 캘린더를 함께 봅니다.", "settings" => "캘린더·메일 연결 및 저장 안내", _ => account == null ? "Gmail · 네이버 · 하이웍스" : $"{account.ProviderLabel} · {account.Address}" };
         InboxNav.Background = Brush(value == "mail" ? "#3B69DC" : "#223C5B");
@@ -135,9 +136,8 @@ public partial class MainWindow : Window
     }
     private void PreviousMonth_Click(object sender, RoutedEventArgs e) => ChangeMonth(-1);
     private void NextMonth_Click(object sender, RoutedEventArgs e) => ChangeMonth(1);
-    private void SampleEvents_Changed(object sender, RoutedEventArgs e) { if (ready) RenderCalendar(); }
     private IEnumerable<CalendarEvent> CalendarEventsOn(DateTime date) => workspace.EventsOn(date)
-        .Where(x => x.AccountId == Workspace.LocalCalendarId || ShowSampleEvents.IsChecked == true)
+        .Where(x => x.AccountId == Workspace.LocalCalendarId)
         .Concat(RemoteEventsOn(date)).OrderByDescending(x => x.IsAllDay).ThenBy(x => x.Start);
     private void Today_Click(object sender, RoutedEventArgs e) { month = selectedDay = DateTime.Today; RenderCalendar(); RefreshCalendarMonthIfNeeded(); }
     private void NewEvent_Click(object sender, RoutedEventArgs e) => EditEvent(null);
@@ -155,6 +155,7 @@ public partial class MainWindow : Window
     private static SolidColorBrush Brush(string color) => (SolidColorBrush)new BrushConverter().ConvertFromString(color)!;
     private void RenderCalendar()
     {
+        RefreshDesktopWidget();
         CalendarDays.Children.Clear();
         MonthTitle.Text = month.ToString("yyyy년 M월", Korean);
         foreach (var date in Workspace.MonthDays(month))
@@ -224,16 +225,14 @@ public partial class MainWindow : Window
             var oldStar = selected.IsStarred; StarButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent)); Check(selected.IsStarred != oldStar, "star toggle");
             CalendarNav.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             Check(CalendarDays.Children.Count == 42 && !CalendarEventsOn(selectedDay).Any(), "calendar hides sample events by default");
-            ShowSampleEvents.IsChecked = true;
-            Check(AgendaItems.Children.Count == 3, "optional sample events");
+            Check(AgendaItems.Children.Count == 1, "no sample calendar controls or events");
             await Capture("02-calendar");
             var editor = new EventEditor(workspace, selectedDay) { Owner = this };
             editor.Loaded += (_, _) => { editor.TitleInput.Text = "로컬 테스트 일정"; editor.SaveEventButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent)); };
             Check(editor.ShowDialog() == true && editor.SavedEvent != null, "local event editor create");
             var localEvent = editor.SavedEvent!;
-            RenderCalendar(); Check(AgendaItems.Children.Count == 4, "local event in agenda");
+            RenderCalendar(); Check(CalendarEventsOn(selectedDay).Single().Id == localEvent.Id, "local event in agenda");
             accountId = "naver-demo";
-            ShowSampleEvents.IsChecked = false;
             Check(CalendarEventsOn(selectedDay).Single().Id == localEvent.Id, "mail account filter cannot hide local events");
             await Capture("04-local-event");
             Width = MinWidth; Height = MinHeight;
@@ -257,11 +256,10 @@ public partial class MainWindow : Window
             await Capture("08-connected-calendar-test-data");
             calendarSnapshots.Clear(); RenderCalendar();
             Width = 1440; Height = 900;
-            ShowSampleEvents.IsChecked = true;
             var editDialog = new EventEditor(workspace, selectedDay, localEvent) { Owner = this };
             editDialog.Loaded += (_, _) => { editDialog.TitleInput.Text = "수정한 일정"; editDialog.SaveEventButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent)); };
             Check(editDialog.ShowDialog() == true && workspace.State.Events.Single(x => x.Id == localEvent.Id).Title == "수정한 일정", "local event editor update");
-            workspace.DeleteLocalEvent(localEvent.Id); RenderCalendar(); Check(AgendaItems.Children.Count == 3, "local event delete");
+            workspace.DeleteLocalEvent(localEvent.Id); RenderCalendar(); Check(!CalendarEventsOn(selectedDay).Any(), "local event delete");
             var firstDate = month; NextMonth_Click(this, new RoutedEventArgs()); Check(month.Month == firstDate.AddMonths(1).Month && selectedDay.Month == month.Month, "month navigation keeps agenda in displayed month"); Today_Click(this, new RoutedEventArgs());
             var outsideDay = CalendarDays.Children.Cast<Button>().First(b => ((DateTime)b.Tag).Month != month.Month);
             var outsideDate = (DateTime)outsideDay.Tag;
@@ -315,6 +313,21 @@ public partial class MainWindow : Window
             Check(!preferences.MailNotificationsEnabled, "mail notification setting applies immediately");
             NewMailEnabled.IsChecked = true;
             Check(Icon != null, "window uses packaged application icon");
+            ShowDesktopWidget();
+            Check(desktopWidget is { IsVisible: true, ShowInTaskbar: false, EventCount: 0 }, "desktop widget opens with empty real calendar");
+            var widgetEvent = workspace.SaveLocalEvent(null, "위젯 검증 일정", DateTime.Today, TimeSpan.FromHours(9), TimeSpan.FromHours(10), "");
+            RefreshDesktopWidget(); Check(desktopWidget!.EventCount == 1, "desktop widget reflects local calendar changes");
+            Hide(); Check(desktopWidget.IsVisible, "desktop widget remains visible while main window is hidden"); ShowMainWindow();
+            await Capture("11-desktop-widget", (FrameworkElement)desktopWidget.Content);
+            desktopWidget.Close(); Check(desktopWidget == null && !preferences.WidgetEnabled, "closing widget clears restore preference");
+            workspace.DeleteLocalEvent(widgetEvent.Id);
+            workspace.State.Accounts.Clear(); workspace.State.Messages.Clear(); workspace.State.Events.Clear();
+            accountId = null; RefreshAccounts(); ShowPage("mail");
+            Check(MessageList.Items.Count == 0 && AccountList.Items.Count == 0 && !ReadButton.IsEnabled && !StarButton.IsEnabled && !MailNoticeText.Text.Contains("예시"), "empty production inbox without example accounts");
+            await Capture("12-empty-inbox");
+            ShowPage("calendar"); RenderCalendar();
+            Check(!CalendarEventsOn(DateTime.Today).Any(), "empty production calendar without examples");
+            await Capture("13-empty-calendar");
             File.WriteAllText(Path.Combine(output, "smoke-result.json"), JsonSerializer.Serialize(new { success = true, checks, skipped, utc = DateTimeOffset.UtcNow }, new JsonSerializerOptions { WriteIndented = true }));
             Application.Current.Shutdown(0);
         }

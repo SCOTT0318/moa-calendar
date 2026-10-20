@@ -26,6 +26,7 @@ public partial class MainWindow
         tray = new Forms.NotifyIcon { Text = "모아 · 메일과 일정", Visible = true, Icon = new System.Drawing.Icon(Application.GetResourceStream(new Uri("pack://application:,,,/Assets/moa.ico")).Stream) };
         var menu = new Forms.ContextMenuStrip(); menu.Items.Add("모아 열기", null, (_, _) => Dispatcher.BeginInvoke(ShowMainWindow));
         menu.Items.Add("새로고침", null, (_, _) => Dispatcher.BeginInvoke(async () => await RefreshRemoteCalendarsAsync()));
+        menu.Items.Add("미니 위젯 열기", null, (_, _) => Dispatcher.BeginInvoke(ShowDesktopWidget));
         menu.Items.Add("종료", null, (_, _) => Dispatcher.BeginInvoke(ExitApplication)); tray.ContextMenuStrip = menu;
         tray.DoubleClick += (_, _) => Dispatcher.BeginInvoke(ShowMainWindow);
         Closing += OnWindowClosing;
