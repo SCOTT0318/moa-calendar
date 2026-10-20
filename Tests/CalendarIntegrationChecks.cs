@@ -89,7 +89,7 @@ internal static class CalendarIntegrationChecks
         var naverSource = new RemoteCalendar("naver-1", "업무", "#1F9B69");
         var occurrences = IcsCalendarReader.Read(ics, "naver-connection", naverSource, from, to);
         check(occurrences.Count == 4 && occurrences.All(x => x.Title != "취소") && occurrences.Count(x => x.Start.LocalDateTime.Date == new DateTime(2026, 10, 21)) == 0, "CalDAV recurrence exclusions and cancellations");
-        check(occurrences.Single(x => x.Title == "변경한 회의").Start.ToOffset(TimeSpan.FromHours(9)).Hour == 11 && occurrences.Count(x => x.Start.ToOffset(TimeSpan.FromHours(9)).Hour == 9) == 2, "CalDAV recurrence overrides and simultaneous events preserved");
+        check(occurrences.Single(x => x.Title == "변경한 회의").Start.ToOffset(TimeSpan.FromHours(9)).Hour == 11 && occurrences.Count(x => !x.IsAllDay && x.Start.ToOffset(TimeSpan.FromHours(9)).Hour == 9) == 2, "CalDAV recurrence overrides and simultaneous events preserved");
         check(occurrences.Single(x => x.IsAllDay).End.LocalDateTime.Date == new DateTime(2026, 10, 22), "CalDAV multi-day all-day event");
         check(IcsCalendarReader.Read(ics, "naver-connection", naverSource, from, to).Count == occurrences.Count, "CalDAV repeated reads are stable");
         var cancelled = new CancellationToken(true); failed = false;
