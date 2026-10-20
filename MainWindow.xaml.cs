@@ -206,6 +206,7 @@ public partial class MainWindow : Window
         var i = Array.IndexOf(args, "--smoke-test");
         var output = i + 1 < args.Length ? Path.GetFullPath(args[i + 1]) : Path.Combine(AppContext.BaseDirectory, "Smoke");
         var checks = new List<string>();
+        var skipped = new List<string>();
         try
         {
             Directory.CreateDirectory(output);
@@ -237,7 +238,9 @@ public partial class MainWindow : Window
             await Capture("04-local-event");
             Width = MinWidth; Height = MinHeight;
             await Capture("05-compact-calendar");
-            Check(MonthTitle.ActualWidth > 140 && NewEventButton.ActualWidth > 80 && CalendarDays.ActualWidth / 7 > 65, "minimum window calendar layout");
+            if (ActualWidth + 1 < MinWidth || ((FrameworkElement)Content).ActualWidth < MinWidth - 32)
+                skipped.Add("minimum window calendar layout: available desktop is smaller than supported 1120px width");
+            else Check(MonthTitle.ActualWidth > 140 && NewEventButton.ActualWidth > 80 && CalendarDays.ActualWidth / 7 > 65, "minimum window calendar layout");
             ShowPage("mail");
             await Capture("06-compact-inbox");
             Check(ReaderBody.ActualWidth > 250 && ReaderBody.ActualHeight > 100, "minimum window mail reader layout");
@@ -310,9 +313,9 @@ public partial class MainWindow : Window
             Check(!preferences.MailNotificationsEnabled, "mail notification setting applies immediately");
             NewMailEnabled.IsChecked = true;
             Check(Icon != null, "window uses packaged application icon");
-            File.WriteAllText(Path.Combine(output, "smoke-result.json"), JsonSerializer.Serialize(new { success = true, checks, utc = DateTimeOffset.UtcNow }, new JsonSerializerOptions { WriteIndented = true }));
+            File.WriteAllText(Path.Combine(output, "smoke-result.json"), JsonSerializer.Serialize(new { success = true, checks, skipped, utc = DateTimeOffset.UtcNow }, new JsonSerializerOptions { WriteIndented = true }));
             Application.Current.Shutdown(0);
         }
-        catch (Exception ex) { Directory.CreateDirectory(output); File.WriteAllText(Path.Combine(output, "smoke-result.json"), JsonSerializer.Serialize(new { success = false, checks, error = ex.ToString() })); Application.Current.Shutdown(1); }
+        catch (Exception ex) { Directory.CreateDirectory(output); File.WriteAllText(Path.Combine(output, "smoke-result.json"), JsonSerializer.Serialize(new { success = false, checks, skipped, error = ex.ToString() })); Application.Current.Shutdown(1); }
     }
 }
