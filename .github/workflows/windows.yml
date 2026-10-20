@@ -33,6 +33,7 @@ jobs:
           name: moa-windows-checks
           path: |
             Evidence/*result.json
+            Evidence/*.png
             dist/Moa-Setup.exe
             dist/Moa-win-x64.zip
             dist/SHA256SUMS.txt

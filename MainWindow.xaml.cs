@@ -240,7 +240,9 @@ public partial class MainWindow : Window
             await Capture("05-compact-calendar");
             if (ActualWidth + 1 < MinWidth || ((FrameworkElement)Content).ActualWidth < MinWidth - 32)
                 skipped.Add("minimum window calendar layout: available desktop is smaller than supported 1120px width");
-            else Check(MonthTitle.ActualWidth > 140 && NewEventButton.ActualWidth > 80 && CalendarDays.ActualWidth / 7 > 65, "minimum window calendar layout");
+            else Check(MonthTitle.ActualWidth > 0 && NewEventButton.ActualWidth > 0
+                && MonthTitle.TranslatePoint(new Point(MonthTitle.ActualWidth, 0), CalendarPanel).X <= NewEventButton.TranslatePoint(new Point(0, 0), CalendarPanel).X
+                && CalendarDays.ActualWidth / 7 > 65, "minimum window calendar layout");
             ShowPage("mail");
             await Capture("06-compact-inbox");
             Check(ReaderBody.ActualWidth > 250 && ReaderBody.ActualHeight > 100, "minimum window mail reader layout");
