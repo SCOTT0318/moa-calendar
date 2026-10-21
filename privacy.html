@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="모아 Windows 앱과 안내 웹페이지의 정보 처리, 메일·일정의 로컬 보관, 계정 권한과 삭제 방법을 설명합니다.">
+  <title>개인정보처리방침 — 모아</title>
+  <link rel="icon" href="assets/moa.png" type="image/png">
+  <link rel="stylesheet" href="site.css">
+</head>
+<body>
+  <a class="skip" href="#main">본문으로 이동</a>
+  <header class="site-header"><div class="container header-inner"><a class="brand" href="index.html"><img src="assets/moa.png" width="38" height="38" alt="">모아</a><nav aria-label="주 메뉴"><a href="index.html">앱 소개</a><a href="privacy.html" aria-current="page">개인정보처리방침</a><a href="terms.html">이용안내</a></nav></div></header>
+  <main id="main" class="container">
+    <article class="content">
+      <p class="eyebrow">PRIVACY · WINDOWS APP</p>
+      <h1>내 정보의 사용과 보관</h1>
+      <p class="lead">운영자 SCOTT0318이 개인 사용을 위해 만든 모아 Windows 앱과 이 안내 웹페이지의 정보 처리를 설명합니다. 앱의 계정 데이터 보관과 웹페이지 접속 정보는 구분해 안내합니다.</p>
+      <p class="document-meta">시행일: 2026년 10월 21일 · 문의: <a href="mailto:manjeed0318@gmail.com">manjeed0318@gmail.com</a></p>
+      <div class="notice"><p>현재 앱은 선택한 계정 제공자와 직접 통신합니다. 계정 데이터는 모아의 별도 수집 서버로 보내지 않으며 광고·데이터 판매·AI 모델 학습을 위한 전송 기능을 구현하지 않았습니다.</p></div>
+      <nav class="toc" aria-label="문서 목차"><strong>이 문서에서 확인할 내용</strong><ul><li><a href="#data">접근하는 정보와 사용 목적</a></li><li><a href="#storage">PC에 남는 정보와 보관 방식</a></li><li><a href="#transfer">외부 통신과 Google 권한</a></li><li><a href="#delete">연결 해제·권한 철회·삭제</a></li><li><a href="#control">알림과 변경 안내</a></li><li><a href="#website">웹페이지 접속과 문의 정보</a></li></ul></nav>
+      <section id="data">
+        <h2>1. 접근하는 정보와 사용 목적</h2>
+        <div class="table-wrap"><table><thead><tr><th scope="col">항목</th><th scope="col">현재 사용하는 정보</th><th scope="col">사용 목적</th></tr></thead><tbody>
+          <tr><td>연결 계정</td><td>제공자, 이메일·아이디, 표시 이름, 선택 기능, OAuth 토큰 또는 해당 제공자의 비밀번호·앱 비밀번호</td><td>계정 인증, 계정 구분, 승인된 기능의 자동 동기화</td></tr>
+          <tr><td>메일</td><td>계정별 최근 받은 메일의 식별자, 발신자·주소, 제목, 수신 시각, 본문과 읽음·중요 상태 등 조회 응답</td><td>통합 메일함, 계정 필터, PC 내 검색, 본문 표시와 새 메일 알림</td></tr>
+          <tr><td>계정 일정</td><td>캘린더 목록·권한과 일정 조회 응답(식별자·제목·시간·장소·알림·종일·반복 정보 등), CalDAV 일정 원문(ICS)과 변경 충돌 확인 정보</td><td>달력·위젯 표시, 일정 알림, 승인한 캘린더의 일정 등록·수정과 기존 속성 보존</td></tr>
+          <tr><td>내 일정·설정</td><td>직접 입력한 일정 제목·시간·장소·알림, 알림·트레이·위젯 설정, 위젯 위치·크기, 중복 알림 방지 기록</td><td>이 PC의 일정 관리, 표시 상태 복원과 중복 알림 방지</td></tr>
+        </tbody></table></div>
+        <p>메일은 표시와 검색을 위해 읽습니다. 서버의 읽음·별표를 변경하거나 메일을 발송·삭제하지 않습니다. 앱에서 바꾼 읽음·중요 표시는 현재 실행의 표시 상태입니다. 메일 조회 응답을 메모리에서 처리할 수 있지만 첨부파일 열기·저장 기능은 제공하지 않습니다.</p>
+        <p>계정 캘린더를 저장 대상으로 선택하면 입력한 제목·시간·장소·알림을 해당 제공자에게 전송합니다. 로컬의 <strong>내 일정</strong>을 선택하면 그 일정은 PC에만 저장합니다.</p>
+      </section>
+      <section id="storage">
+        <h2>2. PC에 남는 정보와 보관 방식</h2>
+        <p>기본 데이터 폴더는 <code>%LOCALAPPDATA%\Moa</code>입니다. 별도 데이터 경로로 실행한 경우에는 지정한 폴더를 사용합니다.</p>
+        <div class="table-wrap"><table><thead><tr><th scope="col">보관 항목</th><th scope="col">위치·보호 방식</th><th scope="col">남는 기간</th></tr></thead><tbody>
+          <tr><td>계정·인증 정보</td><td><code>calendar-private.bin</code>에 현재 Windows 사용자용 DPAPI로 암호화</td><td>계정을 연결 해제하거나 해당 로컬 파일을 삭제할 때까지</td></tr>
+          <tr><td>직접 만든 내 일정</td><td><code>demo-state.json</code> 평문 JSON. 파일명은 이전 버전 호환을 위해 유지</td><td>앱에서 일정을 삭제하거나 해당 파일을 삭제할 때까지</td></tr>
+          <tr><td>환경설정·알림 기록</td><td><code>settings.json</code>에 알림·트레이·위젯 설정과 알림 식별 해시·일정 시작 시각 저장</td><td>설정을 변경하거나 해당 파일을 삭제할 때까지. 일부 지난 알림 기록은 실행 중 정리</td></tr>
+          <tr><td>실제 메일·외부 일정</td><td>동기화 결과를 실행 중 메모리에 유지. 실제 메일 본문·외부 일정의 별도 영구 캐시 파일은 만들지 않음</td><td>현재 실행 중 또는 계정 연결 해제 전까지. 다음 실행에 제공자에서 다시 조회</td></tr>
+        </tbody></table></div>
+        <p>이전 포터블 버전의 실행 폴더 옆 <code>Data</code>가 있으면 최초 실행 때 계정·일정 파일을 기본 데이터 폴더로 복사해 가져올 수 있습니다. 이 과정에서 이전 원본은 삭제하지 않습니다.</p>
+        <p>계정 파일의 암호화가 내 일정·설정 파일까지 암호화한다는 뜻은 아닙니다. PC의 Windows 계정 접근, 화면 표시와 사용자가 따로 만든 백업 사본은 사용자가 관리해야 합니다.</p>
+      </section>
+      <section id="transfer">
+        <h2>3. 외부 통신과 Google 권한</h2>
+        <ul>
+          <li><strong>Google:</strong> 시스템 브라우저의 Google 인증 화면과 공식 OAuth·Gmail·Calendar API에 직접 연결합니다. 이메일 입력은 선택이며 새 Google 연결에서 비밀번호·앱 비밀번호·JSON 파일을 요구하지 않습니다.</li>
+          <li><strong>네이버:</strong> IMAP 메일 서버와 HTTPS CalDAV 캘린더 서버에 직접 연결합니다. Windows CalDAV의 실제 계정 호환은 별도 확인이 필요합니다.</li>
+          <li><strong>하이웍스:</strong> POP3 메일 서버에 직접 연결하며 서버의 메일 사본을 삭제하지 않습니다. 캘린더 연결은 제공하지 않습니다.</li>
+          <li><strong>기존 Google 앱 비밀번호 계정:</strong> 이전 연결을 보존한 경우 Google IMAP을 계속 사용할 수 있습니다. 브라우저 승인으로 전환할 수 있습니다.</li>
+        </ul>
+        <p>연결 계정의 인증과 조회·저장을 위해 계정 제공자에게 필요한 인증 정보와 요청을 전송합니다. 제공자는 자체 정책에 따라 요청을 처리합니다. 모아가 Gmail 데이터를 네이버·하이웍스로 복사하거나 계정 데이터를 개발자의 별도 서버로 업로드하는 기능은 없습니다.</p>
+        <div class="table-wrap"><table><thead><tr><th scope="col">Google 권한</th><th scope="col">요청하는 경우와 사용 범위</th></tr></thead><tbody>
+          <tr><td><code>gmail.readonly</code></td><td>메일 수신을 선택한 경우. 계정 주소 확인과 받은 편지함의 최근 메일 읽기·검색·알림</td></tr>
+          <tr><td><code>calendar.readonly</code></td><td>캘린더를 선택한 경우. 읽을 수 있는 캘린더 목록과 일정 조회·달력·위젯·알림 표시</td></tr>
+          <tr><td><code>calendar.events</code></td><td>일정 등록·수정 동기화를 선택한 경우. 사용자가 저장 대상으로 선택한 쓰기 가능한 캘린더에 단일 시간 일정 등록·수정</td></tr>
+        </tbody></table></div>
+        <p>사용자가 선택하고 Google이 실제 허용한 기능만 연결합니다. 메일이나 캘린더 중 일부만 승인해도 허용한 기능을 사용할 수 있고, 캘린더 쓰기를 허용하지 않으면 일정은 조회만 제공합니다. 메일·캘린더를 모두 허용하지 않으면 계정을 추가하지 않습니다.</p>
+        <p>계정 옆 <strong>연결 기능 변경</strong>에서 메일·캘린더·쓰기 사용 여부를 바꾸고 같은 계정으로 재승인할 수 있습니다. 끈 기능의 데이터는 앱 목록에서 제거하며 쓰기를 끄면 원격 저장을 차단합니다. 변경 취소나 다른 계정 승인으로 확인이 실패하면 기존 연결을 유지합니다. 앱의 기능을 끄는 것과 Google 서버 권한의 철회는 별개입니다.</p>
+        <p>모아의 Google API에서 받은 정보의 사용 및 다른 앱으로의 전달은 <a href="https://developers.google.com/terms/api-services-user-data-policy">Google API Services User Data Policy</a>와 그 Limited Use 요구사항을 따릅니다. 현재 앱은 데이터를 사용자가 보는 메일·일정 기능에 사용하며 광고, 정보 재판매, 신용 평가 또는 AI 모델 학습 목적으로 사용하지 않습니다.</p>
+      </section>
+      <section id="delete">
+        <h2>4. 연결 해제·권한 철회·삭제</h2>
+        <ol>
+          <li><strong>이 PC의 계정 연결 중단:</strong> 설정의 해당 계정에서 <strong>연결 해제</strong>를 선택합니다. 그 계정의 로컬 로그인 정보를 지우고 현재 메일함·달력 목록에서 해당 계정 데이터를 제거합니다. 다른 연결 계정과 내 일정은 유지합니다.</li>
+          <li><strong>Google 서버의 앱 권한 철회:</strong> <a href="https://support.google.com/accounts/answer/13533235?hl=ko">Google 계정의 연결된 앱 관리 안내</a>에 따라 모아에 부여한 접근 권한을 삭제합니다. 모아의 연결 해제는 Google 서버의 권한 철회를 자동 수행하지 않습니다.</li>
+          <li><strong>내 일정 삭제:</strong> 앱에서 해당 로컬 일정을 삭제합니다. Google·네이버에 이미 저장한 원격 일정의 삭제는 해당 제공자 캘린더에서 수행합니다.</li>
+          <li><strong>이 PC의 보관 데이터 전체 삭제:</strong> 트레이의 <strong>종료</strong>로 모아를 완전히 끝낸 뒤 위 데이터 폴더를 삭제할 수 있습니다. 직접 만든 내 일정과 모든 계정 연결·설정도 함께 사라집니다. 이전 <code>Data</code>나 별도 백업은 따로 관리해야 합니다. 이전 <code>Data</code> 원본을 남기면 다음 실행 때 다시 가져올 수 있습니다.</li>
+        </ol>
+        <p><strong>앱 제거만으로 사용자 데이터 폴더는 삭제되지 않습니다.</strong> 설치·업데이트·앱 제거는 계정·내 일정·설정을 보존합니다. 로컬 파일 삭제나 계정 연결 해제로 Google·네이버·하이웍스의 원본 메일과 원격 일정이 삭제되지는 않습니다.</p>
+      </section>
+      <section id="control">
+        <h2>5. 표시·알림과 변경 안내</h2>
+        <p>메일 제목·발신자와 일정 제목·시간은 앱 창·위젯·자체 알림에 표시될 수 있습니다. 설정에서 일정·새 메일 알림과 위젯을 끌 수 있습니다. 창을 닫아도 트레이 실행을 켜 두면 동기화·알림은 계속되며 앱을 완전히 종료하면 중단됩니다.</p>
+        <p>데이터 사용 목적이나 처리 범위를 바꾸는 경우 관련 안내와 개인정보처리방침을 먼저 갱신하고 필요한 동의를 받은 뒤 변경 기능을 제공해야 합니다.</p>
+      </section>
+      <section id="website">
+        <h2>6. 웹페이지 접속과 문의 정보</h2>
+        <p>이 안내 페이지는 GitHub Pages로 호스팅합니다. GitHub는 보안 목적으로 방문자의 IP 주소를 기록·보관하며 접속 시각·브라우저 정보 등 서비스 이용 정보도 자체 방침에 따라 처리할 수 있습니다. 자세한 내용은 <a href="https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages#data-collection">GitHub Pages의 정보 수집 안내</a>와 <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">GitHub 개인정보처리방침</a>을 확인하세요.</p>
+        <p>웹페이지는 계정 로그인·메일·일정을 입력받는 양식을 제공하지 않습니다. 별도 분석·광고 스크립트도 추가하지 않았습니다. 웹 호스팅의 접속 기록은 모아 앱이 메일·캘린더 데이터를 GitHub로 전송하는 것과 다르며, 앱은 해당 계정 데이터를 이 웹페이지로 업로드하지 않습니다.</p>
+        <p>운영자는 <strong>SCOTT0318</strong>이며 개인정보 관련 문의·정정·삭제 요청과 제품 문제는 <a href="mailto:manjeed0318@gmail.com">manjeed0318@gmail.com</a>으로 보낼 수 있습니다. 이메일을 보내면 회신 주소와 문의 내용이 운영자의 메일함에 전달되고 문의 대응에 사용됩니다. 문의할 때 비밀번호·토큰·OAuth 설정 파일이나 불필요한 메일 본문·개인 일정은 보내지 마세요.</p>
+      </section>
+    </article>
+  </main>
+  <footer class="site-footer"><div class="container footer-inner"><p>모아 · 운영자 SCOTT0318</p><div><a href="index.html">앱 소개</a> · <a href="terms.html">이용안내</a> · <a href="mailto:manjeed0318@gmail.com">문의</a></div></div></footer>
+</body>
+</html>

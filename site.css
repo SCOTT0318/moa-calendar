@@ -1,0 +1,102 @@
+:root {
+  color-scheme: light;
+  --ink: #18334b;
+  --muted: #586d7c;
+  --paper: #f5f7f6;
+  --line: #dce5e3;
+  --accent: #246b61;
+  --soft: #e5f0eb;
+  --warm: #f6efe0;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.85 "Segoe UI", "Malgun Gothic", sans-serif; word-break: keep-all; overflow-wrap: anywhere; }
+a { color: var(--accent); text-underline-offset: 4px; }
+a:hover { text-decoration-thickness: 2px; }
+a:focus-visible { outline: 3px solid #b27618; outline-offset: 5px; border-radius: 3px; }
+.skip { position: absolute; top: -100px; left: 16px; background: white; padding: 8px 16px; z-index: 5; }
+.skip:focus { top: 10px; }
+.container { width: min(1080px, calc(100% - 64px)); margin-inline: auto; }
+.site-header { border-bottom: 1px solid var(--line); background: #fffdf9; }
+.header-inner { display: flex; align-items: center; justify-content: space-between; gap: 24px; min-height: 86px; }
+.brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); font-size: 23px; font-weight: 700; letter-spacing: -.06em; }
+.brand img { width: 38px; height: 38px; }
+.site-header nav { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 14px; }
+.site-header nav a { color: var(--muted); text-decoration: none; }
+.site-header nav a[aria-current="page"] { color: var(--accent); font-weight: 700; }
+main { padding-block: 64px 88px; }
+.eyebrow { margin: 0 0 15px; font-size: 12px; font-weight: 700; color: var(--accent); letter-spacing: .12em; }
+h1, h2, h3 { margin: 0; line-height: 1.45; letter-spacing: -.045em; }
+h1 { font-size: clamp(32px, 4.4vw, 52px); }
+h2 { font-size: 25px; }
+h3 { font-size: 18px; }
+p { margin: 14px 0 0; }
+.lead { max-width: 710px; color: var(--muted); font-size: 18px; line-height: 1.9; }
+.document-meta { margin-top: 22px; color: var(--muted); font-size: 12px; }
+.hero { display: grid; grid-template-columns: 1.04fr 1fr; align-items: center; gap: 48px; }
+.hero .lead { margin-top: 22px; }
+.actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
+.button { display: inline-block; padding: 10px 17px; background: var(--accent); color: white; border-radius: 8px; font-size: 14px; font-weight: 600; text-decoration: none; }
+.button.secondary { background: white; color: var(--accent); border: 1px solid var(--line); }
+.preview { padding: 23px; border: 1px solid #cbdad4; background: var(--soft); border-radius: 20px; }
+.preview-label { color: var(--muted); font-size: 11px; margin: 0 0 12px; }
+.preview-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.preview-pane { background: #fff; padding: 17px 14px; border-radius: 12px; min-width: 0; }
+.preview-pane strong { font-size: 14px; }
+.calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px 3px; margin-top: 17px; font-size: 10px; text-align: center; }
+.calendar-grid span { padding-block: 2px; }
+.calendar-grid .selected { background: var(--accent); color: white; border-radius: 5px; }
+.example-event { margin-top: 16px; padding-left: 10px; border-left: 3px solid #83ad9d; font-size: 12px; }
+.example-event small { color: var(--accent); }
+.example-event p { margin-top: 4px; font-size: 12px; }
+.section { margin-top: 64px; }
+.grid-three { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 24px; }
+.card { background: white; border: 1px solid var(--line); border-radius: 12px; padding: 25px; }
+.card p { font-size: 14px; color: var(--muted); }
+.number { color: var(--accent); font-size: 12px; font-weight: 700; display: block; margin-bottom: 15px; }
+.notice { margin-top: 28px; border-left: 3px solid var(--accent); padding: 18px 22px; background: #eaf1ed; border-radius: 0 8px 8px 0; font-size: 14px; }
+.notice p:first-child { margin-top: 0; }
+.split { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 24px; }
+.content { width: min(820px, 100%); }
+.content .lead { margin-top: 20px; }
+.content section { margin-top: 42px; }
+.content h2 { font-size: 22px; }
+.content ul, .content ol { padding-left: 23px; }
+.content li + li { margin-top: 10px; }
+.toc { margin-top: 32px; padding: 20px 24px; background: white; border: 1px solid var(--line); border-radius: 10px; }
+.toc ul { margin: 8px 0 0; }
+.table-wrap { overflow-x: auto; margin-top: 22px; border: 1px solid var(--line); border-radius: 10px; background: white; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; text-align: left; }
+th, td { padding: 15px 17px; vertical-align: top; border-bottom: 1px solid var(--line); }
+th { background: #edf3ef; font-weight: 700; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+code { font-family: Consolas, "Malgun Gothic", monospace; font-size: .88em; background: #e8eeeb; border-radius: 3px; padding: 2px 5px; }
+.fine { color: var(--muted); font-size: 13px; }
+.site-footer { border-top: 1px solid var(--line); padding-block: 27px 34px; background: #fffdf9; }
+.footer-inner { display: flex; justify-content: space-between; gap: 18px; align-items: baseline; }
+.site-footer p { margin: 0; color: var(--muted); font-size: 12px; }
+.site-footer a { font-size: 13px; }
+@media (max-width: 760px) {
+  .container { width: min(100% - 36px, 1080px); }
+  .header-inner { align-items: flex-start; flex-direction: column; gap: 10px; padding-block: 17px; }
+  .site-header nav { font-size: 12px; gap: 6px 18px; }
+  main { padding-block: 38px 56px; }
+  .hero, .split, .grid-three { grid-template-columns: 1fr; }
+  .hero { gap: 30px; }
+  .lead { font-size: 16px; }
+  .preview { padding: 16px; }
+  .section { margin-top: 46px; }
+  .footer-inner { display: block; }
+  .footer-inner > div { margin-top: 10px; }
+  th, td { padding: 12px; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+@media print {
+  body { background: white; color: black; font-size: 10pt; }
+  .container { width: 100%; }
+  nav, .actions, .skip, .preview { display: none; }
+  main { padding-block: 24px; }
+  .hero, .split, .grid-three { display: block; }
+  .card, .notice, .table-wrap { break-inside: avoid; }
+  .content { width: 100%; }
+}
